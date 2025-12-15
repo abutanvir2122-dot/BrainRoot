@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিউক্লিয়াসের 3D মডেল - BrainRoot</title>
+    <meta name="description" content="জীববিজ্ঞানের নিউক্লিয়াসের ইন্টারঅ্যাকটিভ 3D মডেল - শিক্ষামূলক উদ্দেশ্যে তৈরি">
+    <meta name="author" content="Tanvir Ahmed Khan">
+    <style>
+        /* মৌলিক স্টাইল */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .brainroot-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 3px solid #2c3e50;
+        }
+
+        /* হেডার */
+        .brainroot-header {
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #3498db;
+            position: relative;
+        }
+
+        .branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .author {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* মূল কন্টেন্ট */
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* 3D মডেল সেকশন */
+        .model-section {
+            flex: 3;
+            min-width: 300px;
+            background-color: #1a1a2e;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #model3d {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            background-color: #0a0a1a;
+            border: 2px solid #3498db;
+        }
+
+        /* কন্ট্রোলস */
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .controls button {
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+        }
+
+        .controls button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1);
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* তথ্য প্যানেল */
+        .parts-info {
+            flex: 2;
+            min-width: 300px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid #e0e0e0;
+        }
+
+        .parts-selector h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .parts-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .part-btn {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .part-btn:hover {
+            transform: translateX(5px);
+            border-color: #3498db;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .part-btn.active {
+            border-color: #e74c3c;
+            background-color: #e8f4fc;
+            transform: translateX(5px);
+        }
+
+        .color-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* অংশের বিস্তারিত */
+        .part-details {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+        }
+
+        .part-details h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        #part-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .part-facts {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .part-facts h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #facts-list {
+            padding-left: 20px;
+        }
+
+        #facts-list li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* নির্দেশিকা */
+        .instructions {
+            background: linear-gradient(135deg, #6a89cc 0%, #4a69bd 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instruction-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .instruction {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .instruction i {
+            font-size: 1.5rem;
+            margin-top: 3px;
+        }
+
+        .instruction div {
+            flex: 1;
+        }
+
+        .instruction strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .instruction p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* ফুটার */
+        .brainroot-footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-top: 5px solid #3498db;
+        }
+
+        .footer-content p {
+            margin-bottom: 10px;
+        }
+
+        .license {
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* রেস্পন্সিভ ডিজাইন */
+        @media (max-width: 1100px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .model-section, .parts-info {
+                width: 100%;
+            }
+            
+            #model3d {
+                height: 400px;
+            }
+            
+            .author {
+                position: static;
+                margin-top: 15px;
+                display: inline-block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            #model3d {
+                height: 350px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .controls button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .zoom-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .instruction-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .branding {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            #model3d {
+                height: 300px;
+            }
+            
+            .content-wrapper {
+                padding: 10px;
+            }
+            
+            .parts-buttons {
+                gap: 8px;
+            }
+            
+            .part-btn {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+
+        /* লোডিং স্টেট */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* অ্যানিমেশন */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="brainroot-container">
+        <header class="brainroot-header">
+            <div class="branding">
+                <div class="logo">BR</div>
+                <div class="header-content">
+                    <h1><i class="fas fa-dna"></i> নিউক্লিয়াসের 3D মডেল</h1>
+                    <p class="subtitle">BrainRoot - শিক্ষামূলক ইন্টারঅ্যাকটিভ কন্টেন্ট</p>
+                </div>
+            </div>
+            <div class="author">
+                <i class="fas fa-user-graduate"></i> Tanvir Ahmed Khan
+            </div>
+        </header>
+
+        <main>
+            <div class="content-wrapper">
+                <!-- 3D মডেল সেকশন -->
+                <div class="model-section">
+                    <div id="model3d">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i> 3D মডেল লোড হচ্ছে...
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button id="reset-view" class="pulse">
+                            <i class="fas fa-sync-alt"></i> রিসেট ভিউ
+                        </button>
+                        <button id="auto-rotate">
+                            <i class="fas fa-redo-alt"></i> অটো রোটেশন
+                        </button>
+                        <div class="zoom-controls">
+                            <button id="zoom-in">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                            <button id="zoom-out">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- তথ্য ও কন্ট্রোল প্যানেল -->
+                <div class="parts-info">
+                    <div class="parts-selector">
+                        <h2><i class="fas fa-cube"></i> নিউক্লিয়াসের অংশসমূহ</h2>
+                        <div class="parts-buttons">
+                            <button class="part-btn active" data-part="nuclear-membrane">
+                                <span class="color-indicator" style="background-color: #ff6b6b;"></span>
+                                নিউক্লিয়ার মেমব্রেন
+                            </button>
+                            <button class="part-btn" data-part="nuclear-pores">
+                                <span class="color-indicator" style="background-color: #4ecdc4;"></span>
+                                নিউক্লিয়ার রন্ধ্র
+                            </button>
+                            <button class="part-btn" data-part="nucleolus">
+                                <span class="color-indicator" style="background-color: #ffe66d;"></span>
+                                নিউক্লিওলাস
+                            </button>
+                            <button class="part-btn" data-part="nucleoplasm">
+                                <span class="color-indicator" style="background-color: #95e77e;"></span>
+                                নিউক্লিওপ্লাজম
+                            </button>
+                            <button class="part-btn" data-part="nuclear-reticulum">
+                                <span class="color-indicator" style="background-color: #c780e8;"></span>
+                                নিউক্লিয়ার রেটিকুলাম
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- অংশের বিস্তারিত তথ্য -->
+                    <div class="part-details">
+                        <h3 id="part-title">নিউক্লিয়ার মেমব্রেন</h3>
+                        <p id="part-description">নিউক্লিয়ার মেমব্রেন বা কেন্দ্রঝিল্লি নিউক্লিয়াসকে ঘিরে রাখা একটি দ্বিস্তরীয় লিপিড ঝিল্লি। এটি নিউক্লিয়াসকে সাইটোপ্লাজম থেকে পৃথক করে এবং নির্বাচিত অনুপ্রবেশের মাধ্যমে নিউক্লিয়াস ও সাইটোপ্লাজমের মধ্যে পদার্থের আদান-প্রদান নিয়ন্ত্রণ করে।</p>
+                        
+                        <div class="part-facts">
+                            <h4><i class="fas fa-lightbulb"></i> গুরুত্বপূর্ণ তথ্য:</h4>
+                            <ul id="facts-list">
+                                <li>দ্বিস্তরী ফসফোলিপিড ঝিল্লি</li>
+                                <li>নিউক্লিয়াসকে সাইটোপ্লাজম থেকে পৃথক করে</li>
+                                <li>নিউক্লিয়ার রন্ধ্র ধারণ করে</li>
+                                <li>এন্ডোপ্লাজমিক রেটিকুলামের সাথে যুক্ত</li>
+                                <li>প্রোটিন চ্যানেল দ্বারা পরিবেষ্টিত</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ব্যবহার নির্দেশিকা -->
+                    <div class="instructions">
+                        <h3><i class="fas fa-mouse-pointer"></i> কিভাবে ব্যবহার করবেন</h3>
+                        <div class="instruction-items">
+                            <div class="instruction">
+                                <i class="fas fa-arrows-alt"></i>
+                                <div>
+                                    <strong>মডেল ঘোরান:</strong>
+                                    <p>মাউস টেনে মডেলটি যেকোনো দিকে ঘোরান</p>
+                                </div>
+                            </div>
+                            <div class="instruction">
+                                <i class="fas fa-mouse"></i>
+                                <div>
+                                    <strong>জুম ইন/আউট:</strong>
+                                    <p>মাউস স্ক্রোল করুন বা জুম বাটন ব্যবহার করুন</p>
+                                </div>
+                            </div>
+                            <div class="instruction">
+                                <i class="fas fa-hand-point-up"></i>
+                                <div>
+                                    <strong>অংশ নির্বাচন:</strong>
+                                    <p>বাটন ক্লিক করে অংশ নির্বাচন করুন</p>
+                                </div>
+                            </div>
+                            <div class="instruction">
+                                <i class="fas fa-mobile-alt"></i>
+                                <div>
+                                    <strong>মোবাইলে:</strong>
+                                    <p>স্পর্শ করে ঘোরান এবং পিছান</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="brainroot-footer">
+            <div class="footer-content">
+                <p><strong>BrainRoot - নিউক্লিয়াসের ইন্টারঅ্যাকটিভ 3D মডেল</strong></p>
+                <p>শিক্ষামূলক উদ্দেশ্যে তৈরি | সকলের জন্য মুক্ত জ্ঞান</p>
+                <p class="license">© 2023 Tanvir Ahmed Khan | শিক্ষামূলক ব্যবহারের জন্য উন্মুক্ত</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // BrainRoot - নিউক্লিয়াসের 3D মডেল
+        // তৈরি করেছেন: Tanvir Ahmed Khan
+        
+        let scene, camera, renderer, controls;
+        let nucleusParts = {};
+        let autoRotate = true;
+        let selectedPart = 'nuclear-membrane';
+
+        // পার্টের বিস্তারিত তথ্য
+        const partDetails = {
+            'nuclear-membrane': {
+                title: 'নিউক্লিয়ার মেমব্রেন',
+                description: 'নিউক্লিয়ার মেমব্রেন বা কেন্দ্রঝিল্লি নিউক্লিয়াসকে ঘিরে রাখা একটি দ্বিস্তরীয় লিপিড ঝিল্লি। এটি নিউক্লিয়াসকে সাইটোপ্লাজম থেকে পৃথক করে এবং নির্বাচিত অনুপ্রবেশের মাধ্যমে নিউক্লিয়াস ও সাইটোপ্লাজমের মধ্যে পদার্থের আদান-প্রদান নিয়ন্ত্রণ করে। এই ঝিল্লির বাইরের স্তরটি এন্ডোপ্লাজমিক রেটিকুলামের সাথে যুক্ত থাকে।',
+                facts: [
+                    'দ্বিস্তরী ফসফোলিপিড ঝিল্লি',
+                    'নিউক্লিয়াসকে সাইটোপ্লাজম থেকে পৃথক করে',
+                    'নিউক্লিয়ার রন্ধ্র ধারণ করে',
+                    'এন্ডোপ্লাজমিক রেটিকুলামের সাথে যুক্ত',
+                    'প্রোটিন চ্যানেল দ্বারা পরিবেষ্টিত'
+                ]
+            },
+            'nuclear-pores': {
+                title: 'নিউক্লিয়ার রন্ধ্র',
+                description: 'নিউক্লিয়ার রন্ধ্র হচ্ছে নিউক্লিয়ার মেমব্রেনে অবস্থিত বিশেষ প্রোটিন কমপ্লেক্স যা নিউক্লিয়াস ও সাইটোপ্লাজমের মধ্যে অণু চলাচলের পথ তৈরি করে। প্রতিটি নিউক্লিয়ার রন্ধ্র প্রায় ১০০টি বিভিন্ন প্রোটিনের সমন্বয়ে গঠিত এবং এটি নির্বাচিতভাবে RNA, প্রোটিন ও অন্যান্য অণুর চলাচল নিয়ন্ত্রণ করে।',
+                facts: [
+                    'প্রোটিন কমপ্লেক্স দ্বারা গঠিত',
+                    'নিউক্লিয়াস ও সাইটোপ্লাজমের মধ্যে সংযোগ',
+                    'প্রতি নিউক্লিয়াসে হাজার রন্ধ্র থাকতে পারে',
+                    'অনুপ্রবেশ নিয়ন্ত্রণ করে',
+                    'নিউক্লিয়োপোরিন প্রোটিন ধারণ করে'
+                ]
+            },
+            'nucleolus': {
+                title: 'নিউক্লিওলাস',
+                description: 'নিউক্লিওলাস নিউক্লিয়াসের অভ্যন্তরে অবস্থিত একটি গোলাকার, ঘন কাঠামো যা রাইবোজোমাল RNA (rRNA) সংশ্লেষণ ও রাইবোজোমাল সাবইউনিট সংগঠনে মুখ্য ভূমিকা পালন করে। এটি ক্রোমোজোমের নির্দিষ্ট অঞ্চল নিয়ে গঠিত যাকে নিউক্লিওলার অর্গানাইজার রিজিওন বলা হয়।',
+                facts: [
+                    'রাইবোজোমাল RNA সংশ্লেষণ করে',
+                    'রাইবোজোমের সংগঠনে ভূমিকা রাখে',
+                    'ক্রোমোজোমের নির্দিষ্ট অঞ্চলে অবস্থিত',
+                    'প্রোটিন সংশ্লেষণে গুরুত্বপূর্ণ',
+                    'সেল চক্রের উপর ভিত্তি করে আকার পরিবর্তন করে'
+                ]
+            },
+            'nucleoplasm': {
+                title: 'নিউক্লিওপ্লাজম',
+                description: 'নিউক্লিওপ্লাজম বা ক্যারিওপ্লাজম হলো নিউক্লিয়ার মেমব্রেনের অভ্যন্তরে অবস্থিত অর্ধতরল, জেলির মতো পদার্থ। এটি নিউক্লিয়াসের অভ্যন্তরীণ পরিবেশ তৈরি করে এবং ক্রোমাটিন, নিউক্লিওলাস ও অন্যান্য নিউক্লিয়ার উপাদানগুলিকে ধারণ করে। নিউক্লিওপ্লাজমে বিভিন্ন এনজাইম, নিউক্লিওটাইড ও অন্যান্য অণু থাকে যা ডিএনএ প্রতিলিপিকরণ ও ট্রান্সক্রিপশনের জন্য প্রয়োজনীয়।',
+                facts: [
+                    'নিউক্লিয়াসের অভ্যন্তরীণ তরল মাধ্যম',
+                    'ক্রোমাটিন ও নিউক্লিওলাস ধারণ করে',
+                    'বিভিন্ন এনজাইম ও নিউক্লিওটাইড সমৃদ্ধ',
+                    'ডিএনএ প্রতিলিপিকরণে সহায়তা করে',
+                    'নিউক্লিয়ার ম্যাট্রিক্স নামেও পরিচিত'
+                ]
+            },
+            'nuclear-reticulum': {
+                title: 'নিউক্লিয়ার রেটিকুলাম',
+                description: 'নিউক্লিয়ার রেটিকুলাম হলো নিউক্লিয়ার মেমব্রেনের অভ্যন্তরীণ পৃষ্ঠে অবস্থিত একটি জালিকার মতো প্রোটিন কাঠামো যা নিউক্লিয়াসকে যান্ত্রিক সহায়তা প্রদান করে এবং নিউক্লিয়ার আকার ও কাঠামো বজায় রাখতে সাহায্য করে। এটি ক্রোমাটিন সংগঠন ও জিন নিয়ন্ত্রণেও ভূমিকা পালন করে। নিউক্লিয়ার রেটিকুলাম ল্যামিন নামক বিশেষ প্রোটিন দ্বারা গঠিত।',
+                facts: [
+                    'নিউক্লিয়ার ল্যামিনা নামেও পরিচিত',
+                    'নিউক্লিয়ার কাঠামোগত সহায়তা প্রদান করে',
+                    'ক্রোমাটিন সংযুক্তির জন্য জায়গা প্রদান করে',
+                    'সেল ডিভিশনের সময় ভেঙে যায়',
+                    'ল্যামিন প্রোটিন দ্বারা গঠিত'
+                ]
+            }
+        };
+
+        // থ্রি.জেএস সেটআপ
+        function init() {
+            // লোডিং মেসেজ সরান
+            document.querySelector('.loading').style.display = 'none';
+            
+            // দৃশ্য তৈরি
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            // ক্যামেরা তৈরি
+            const container = document.getElementById('model3d');
+            camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            camera.position.z = 15;
+            
+            // রেন্ডারার তৈরি
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true, 
+                alpha: true 
+            });
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // কন্ট্রোলস যোগ
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = autoRotate;
+            controls.autoRotateSpeed = 1.0;
+            
+            // আলো যোগ
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 10, 5);
+            scene.add(directionalLight);
+            
+            const pointLight = new THREE.PointLight(0x4a69bd, 0.5, 100);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+            
+            // নিউক্লিয়াসের অংশগুলো তৈরি
+            createNucleusModel();
+            
+            // ইভেন্ট লিসেনার যোগ
+            setupEventListeners();
+            
+            // রিসাইজ হ্যান্ডলার
+            window.addEventListener('resize', onWindowResize);
+            
+            // তথ্য আপডেট
+            updatePartInfo('nuclear-membrane');
+            
+            // অ্যানিমেশন শুরু
+            animate();
+        }
+
+        // নিউক্লিয়াস মডেল তৈরি
+        function createNucleusModel() {
+            // নিউক্লিওপ্লাজম (ভিতরের অংশ)
+            const nucleoplasmGeometry = new THREE.SphereGeometry(4, 32, 32);
+            const nucleoplasmMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x95e77e, 
+                transparent: true, 
+                opacity: 0.7,
+                shininess: 100
+            });
+            nucleusParts.nucleoplasm = new THREE.Mesh(nucleoplasmGeometry, nucleoplasmMaterial);
+            scene.add(nucleusParts.nucleoplasm);
+            
+            // নিউক্লিয়ার মেমব্রেন (বাইরের স্তর)
+            const membraneGeometry = new THREE.SphereGeometry(4.5, 32, 32);
+            const membraneMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xff6b6b, 
+                transparent: true, 
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            nucleusParts.nuclearMembrane = new THREE.Mesh(membraneGeometry, membraneMaterial);
+            scene.add(nucleusParts.nuclearMembrane);
+            
+            // মেমব্রেনের ওয়্যারফ্রেম
+            const membraneWireframe = new THREE.WireframeGeometry(membraneGeometry);
+            const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                color: 0xff6b6b, 
+                linewidth: 1,
+                transparent: true,
+                opacity: 0.6
+            });
+            nucleusParts.membraneWireframe = new THREE.LineSegments(membraneWireframe, wireframeMaterial);
+            scene.add(nucleusParts.membraneWireframe);
+            
+            // নিউক্লিওলাস (ভিতরে ছোট গোলক)
+            const nucleolusGeometry = new THREE.SphereGeometry(1.2, 24, 24);
+            const nucleolusMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xffe66d, 
+                shininess: 100
+            });
+            nucleusParts.nucleolus = new THREE.Mesh(nucleolusGeometry, nucleolusMaterial);
+            nucleusParts.nucleolus.position.set(1.5, 1, 1);
+            scene.add(nucleusParts.nucleolus);
+            
+            // নিউক্লিয়ার রন্ধ্র (মেমব্রেনে ছিদ্র)
+            createNuclearPores();
+            
+            // নিউক্লিয়ার রেটিকুলাম (জালিকার মতো কাঠামো)
+            createNuclearReticulum();
+            
+            // শুরুতে নিউক্লিয়ার মেমব্রেন হাইলাইট
+            highlightSelectedPart('nuclear-membrane');
+        }
+
+        // নিউক্লিয়ার রন্ধ্র তৈরি
+        function createNuclearPores() {
+            nucleusParts.nuclearPores = new THREE.Group();
+            
+            // বিভিন্ন অবস্থানে রন্ধ্র তৈরি
+            const poreCount = 20;
+            for (let i = 0; i < poreCount; i++) {
+                // গোলকের পৃষ্ঠে এলোমেলো বিন্দু
+                const phi = Math.acos(2 * Math.random() - 1);
+                const theta = 2 * Math.PI * Math.random();
+                const radius = 4.5;
+                
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta);
+                const z = radius * Math.cos(phi);
+                
+                // রন্ধ্র তৈরি
+                const poreGeometry = new THREE.RingGeometry(0.15, 0.3, 8);
+                const poreMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0x4ecdc4, 
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const pore = new THREE.Mesh(poreGeometry, poreMaterial);
+                
+                pore.position.set(x, y, z);
+                
+                // রন্ধ্রকে গোলকের পৃষ্ঠের লম্ব বরাবর ঘোরানো
+                pore.lookAt(new THREE.Vector3(0, 0, 0));
+                
+                nucleusParts.nuclearPores.add(pore);
+            }
+            
+            scene.add(nucleusParts.nuclearPores);
+        }
+
+        // নিউক্লিয়ার রেটিকুলাম তৈরি
+        function createNuclearReticulum() {
+            nucleusParts.nuclearReticulum = new THREE.Group();
+            
+            // জালিকার মতো কাঠামো তৈরি
+            const linesMaterial = new THREE.LineBasicMaterial({ 
+                color: 0xc780e8, 
+                linewidth: 1,
+                transparent: true,
+                opacity: 0.7
+            });
+            
+            // বিভিন্ন বৃত্ত তৈরি
+            const circleCount = 6;
+            for (let i = 0; i < circleCount; i++) {
+                const radius = 3.8 + i * 0.15;
+                const z = (i - circleCount/2) * 0.7;
+                const points = [];
+                const segmentCount = 24;
+                
+                for (let j = 0; j <= segmentCount; j++) {
+                    const theta = (j / segmentCount) * Math.PI * 2;
+                    points.push(new THREE.Vector3(
+                        radius * Math.cos(theta),
+                        radius * Math.sin(theta),
+                        z
+                    ));
+                }
+                
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const circle = new THREE.Line(geometry, linesMaterial);
+                nucleusParts.nuclearReticulum.add(circle);
+            }
+            
+            // উল্লম্ব সংযোগকারী লাইন
+            const verticalLineCount = 12;
+            for (let i = 0; i < verticalLineCount; i++) {
+                const points = [];
+                const angle = (i / verticalLineCount) * Math.PI * 2;
+                
+                for (let j = 0; j < circleCount; j++) {
+                    const radius = 3.8 + j * 0.15;
+                    const z = (j - circleCount/2) * 0.7;
+                    points.push(new THREE.Vector3(
+                        radius * Math.cos(angle),
+                        radius * Math.sin(angle),
+                        z
+                    ));
+                }
+                
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(geometry, linesMaterial);
+                nucleusParts.nuclearReticulum.add(line);
+            }
+            
+            scene.add(nucleusParts.nuclearReticulum);
+        }
+
+        // ইভেন্ট লিসেনার সেটআপ
+        function setupEventListeners() {
+            // পার্ট বাটন ক্লিক
+            document.querySelectorAll('.part-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // সক্রিয় ক্লাস আপডেট
+                    document.querySelectorAll('.part-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // নির্বাচিত পার্ট
+                    selectedPart = this.getAttribute('data-part');
+                    
+                    // তথ্য আপডেট
+                    updatePartInfo(selectedPart);
+                    
+                    // মডেল হাইলাইট
+                    highlightSelectedPart(selectedPart);
+                });
+            });
+            
+            // রিসেট ভিউ বাটন
+            document.getElementById('reset-view').addEventListener('click', function() {
+                controls.reset();
+                camera.position.z = 15;
+                camera.position.x = 0;
+                camera.position.y = 0;
+            });
+            
+            // অটো রোটেশন বাটন
+            document.getElementById('auto-rotate').addEventListener('click', function() {
+                autoRotate = !autoRotate;
+                controls.autoRotate = autoRotate;
+                this.innerHTML = autoRotate ? 
+                    '<i class="fas fa-redo-alt"></i> অটো রোটেশন বন্ধ করুন' : 
+                    '<i class="fas fa-redo-alt"></i> অটো রোটেশন';
+            });
+            
+            // জুম ইন বাটন
+            document.getElementById('zoom-in').addEventListener('click', function() {
+                camera.position.z = Math.max(5, camera.position.z - 1);
+            });
+            
+            // জুম আউট বাটন
+            document.getElementById('zoom-out').addEventListener('click', function() {
+                camera.position.z = Math.min(30, camera.position.z + 1);
+            });
+        }
+
+        // নির্বাচিত অংশের তথ্য আপডেট
+        function updatePartInfo(partKey) {
+            const part = partDetails[partKey];
+            
+            document.getElementById('part-title').textContent = part.title;
+            document.getElementById('part-description').textContent = part.description;
+            
+            const factsList = document.getElementById('facts-list');
+            factsList.innerHTML = '';
+            
+            part.facts.forEach(fact => {
+                const li = document.createElement('li');
+                li.textContent = fact;
+                factsList.appendChild(li);
+            });
+        }
+
+        // নির্বাচিত অংশ হাইলাইট
+        function highlightSelectedPart(partKey) {
+            // সব অংশের স্বাভাবিক অবস্থা ফিরিয়ে আনুন
+            resetAllParts();
+            
+            // নির্বাচিত অংশ হাইলাইট করুন
+            switch(partKey) {
+                case 'nuclear-membrane':
+                    if (nucleusParts.nuclearMembrane) {
+                        nucleusParts.nuclearMembrane.material.opacity = 0.6;
+                        nucleusParts.nuclearMembrane.material.color.setHex(0xff4444);
+                        if (nucleusParts.membraneWireframe) {
+                            nucleusParts.membraneWireframe.material.opacity = 0.9;
+                            nucleusParts.membraneWireframe.material.color.setHex(0xff4444);
+                        }
+                    }
+                    break;
+                case 'nuclear-pores':
+                    if (nucleusParts.nuclearPores) {
+                        nucleusParts.nuclearPores.children.forEach(pore => {
+                            pore.material.opacity = 1;
+                            pore.material.color.setHex(0x00ffff);
+                        });
+                    }
+                    break;
+                case 'nucleolus':
+                    if (nucleusParts.nucleolus) {
+                        nucleusParts.nucleolus.material.color.setHex(0xffaa00);
+                        nucleusParts.nucleolus.scale.set(1.2, 1.2, 1.2);
+                    }
+                    break;
+                case 'nucleoplasm':
+                    if (nucleusParts.nucleoplasm) {
+                        nucleusParts.nucleoplasm.material.opacity = 0.9;
+                        nucleusParts.nucleoplasm.material.color.setHex(0x70ff70);
+                    }
+                    break;
+                case 'nuclear-reticulum':
+                    if (nucleusParts.nuclearReticulum) {
+                        nucleusParts.nuclearReticulum.children.forEach(line => {
+                            line.material.opacity = 1;
+                            line.material.color.setHex(0xff80ff);
+                        });
+                    }
+                    break;
+            }
+        }
+
+        // সব অংশের স্বাভাবিক অবস্থা ফিরিয়ে আনুন
+        function resetAllParts() {
+            // নিউক্লিওপ্লাজম
+            if (nucleusParts.nucleoplasm) {
+                nucleusParts.nucleoplasm.material.opacity = 0.7;
+                nucleusParts.nucleoplasm.material.color.setHex(0x95e77e);
+            }
+            
+            // নিউক্লিয়ার মেমব্রেন
+            if (nucleusParts.nuclearMembrane) {
+                nucleusParts.nuclearMembrane.material.opacity = 0.3;
+                nucleusParts.nuclearMembrane.material.color.setHex(0xff6b6b);
+                if (nucleusParts.membraneWireframe) {
+                    nucleusParts.membraneWireframe.material.opacity = 0.6;
+                    nucleusParts.membraneWireframe.material.color.setHex(0xff6b6b);
+                }
+            }
+            
+            // নিউক্লিওলাস
+            if (nucleusParts.nucleolus) {
+                nucleusParts.nucleolus.material.color.setHex(0xffe66d);
+                nucleusParts.nucleolus.scale.set(1, 1, 1);
+            }
+            
+            // নিউক্লিয়ার রন্ধ্র
+            if (nucleusParts.nuclearPores) {
+                nucleusParts.nuclearPores.children.forEach(pore => {
+                    pore.material.opacity = 0.8;
+                    pore.material.color.setHex(0x4ecdc4);
+                });
+            }
+            
+            // নিউক্লিয়ার রেটিকুলাম
+            if (nucleusParts.nuclearReticulum) {
+                nucleusParts.nuclearReticulum.children.forEach(line => {
+                    line.material.opacity = 0.7;
+                    line.material.color.setHex(0xc780e8);
+                });
+            }
+        }
+
+        // উইন্ডো রিসাইজ হ্যান্ডলার
+        function onWindowResize() {
+            const container = document.getElementById('model3d');
+            camera.aspect = container.offsetWidth / container.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+        }
+
+        // অ্যানিমেশন লুপ
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // নিউক্লিওলাসের ঘূর্ণন
+            if (nucleusParts.nucleolus) {
+                nucleusParts.nucleolus.rotation.x += 0.005;
+                nucleusParts.nucleolus.rotation.y += 0.005;
+            }
+            
+            // নিউক্লিয়ার রেটিকুলামের ঘূর্ণন
+            if (nucleusParts.nuclearReticulum) {
+                nucleusParts.nuclearReticulum.rotation.y += 0.001;
+            }
+            
+            // নিউক্লিয়ার রন্ধ্রের ঘূর্ণন
+            if (nucleusParts.nuclearPores) {
+                nucleusParts.nuclearPores.rotation.y += 0.0005;
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // পেইজ লোড হলে ইনিশিয়ালাইজ করুন
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
